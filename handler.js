@@ -1,6 +1,56 @@
 'use strict';
 
-module.exports.hello = async (event) => {
+module.exports.createNote = async ( event ) => {
+  return {
+    statusCode: 201,
+    body: JSON.stringify(
+      {
+        message: 'Go Serverless v1.0! Your function executed successfully!',
+        input: event,
+      },
+      null,
+      2
+    ),
+  };
+
+};
+
+
+module.exports.updateNote = async ( event ) => {
+  const notesId = event.pathParameters.id
+  return {
+    statusCode: 200,
+    body: JSON.stringify(
+      {
+        message: `The note ${notesId} has been updated`,
+        input: event,
+      },
+      null,
+      2
+    ),
+  };
+
+};
+
+
+module.exports.deleteNote = async ( event ) => {
+  const notesId = event.pathParameters.id
+  return {
+    statusCode: 200,
+    body: JSON.stringify(
+      {
+        message: `The note ${notesId} has been Deleted`,
+        input: event,
+      },
+      null,
+      2
+    ),
+  };
+
+};
+
+
+module.exports.getNote = async ( event ) => {
   return {
     statusCode: 200,
     body: JSON.stringify(
@@ -13,6 +63,4 @@ module.exports.hello = async (event) => {
     ),
   };
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
 };
