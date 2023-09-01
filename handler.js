@@ -2,14 +2,14 @@
 
 const DynamoDb = require( 'aws-sdk/clients/dynamodb' )
 const documentClient = new DynamoDb.DocumentClient( { region: 'ap-south-1' } )
-
+const NOTES_TABLE_NAME = process.env.NOTES_TABLE_NAME || 'notes'
 
 
 module.exports.createNote = async ( event, context, callback ) => {
   const data = JSON.parse( event.body )
   try {
     const params = {
-      TableName: 'notes',
+      TableName: NOTES_TABLE_NAME,
       Item: {
         notesId: data.id,
         title: data.title,

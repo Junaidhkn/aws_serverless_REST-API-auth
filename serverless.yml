@@ -10,6 +10,8 @@ provider:
 functions:
   createNote:
     handler: handler.createNote
+    environment:
+      NOTES_TABLE_NAME: !Ref notesTable
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -22,6 +24,13 @@ functions:
           cors: true
   updateNote:
     handler: handler.updateNote
+    environment:
+      NOTES_TABLE_NAME: !Ref notesTable
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+        Resource: !GetAtt notesTable.Arn
     events:
       - http:
           path: notes/{id}
