@@ -5,7 +5,7 @@ const documentClient = new DynamoDb.DocumentClient( { region: 'ap-south-1' } )
 const NOTES_TABLE_NAME = process.env.NOTES_TABLE_NAME || 'notes'
 
 
-module.exports.createNote = async ( event, context, callback ) => {
+module.exports.createNote = async ( event, _context, callback ) => {
   const data = JSON.parse( event.body )
   try {
     const params = {
@@ -31,20 +31,37 @@ module.exports.createNote = async ( event, context, callback ) => {
 };
 
 
-module.exports.updateNote = async ( event ) => {
+module.exports.updateNote = async ( event, _context, callback ) => {
   const notesId = event.pathParameters.id
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: `The note ${notesId} has been updated`,
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
+  const data = JSON.parse( event.body )
 
+  try {
+    const params = {
+      TableName: NOTES_TABLE_NAME,
+      Key: { notesId },
+      UpdateExpression: 'set #title = :title, #body = :body',
+      ExpressionAttributeNames: {
+        '#title': 'title',
+        '#body': 'body'
+      },
+      ExpressionAttributeValues: {
+        ':title': data.title,
+        ':body': data.body
+      },
+
+      ConditionExpression: 'attribute_exists(notesId)',
+    }
+    await documentClient.update( params ).promise()
+    callback( null, {
+      statusCode: 200,
+      body: JSON.stringify( data )
+    } )
+  } catch ( error ) {
+    callback( null, {
+      statusCode: 500,
+      body: JSON.stringify( error.message )
+    } )
+  }
 };
 
 
