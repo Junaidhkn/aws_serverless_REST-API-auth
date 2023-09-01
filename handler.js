@@ -50,12 +50,12 @@ module.exports.deleteNote = async ( event ) => {
 };
 
 
-module.exports.getNote = async ( event ) => {
+module.exports.getAllNotes = async ( event ) => {
   return {
     statusCode: 200,
     body: JSON.stringify(
       {
-        message: 'Go Serverless v1.0! Your function executed successfully!',
+        message: 'The Array of Notes!',
         input: event,
       },
       null,
