@@ -1,18 +1,33 @@
 'use strict';
 
-module.exports.createNote = async ( event ) => {
-  return {
-    statusCode: 201,
-    body: JSON.stringify(
-      {
-        message: 'Go Serverless v1.0! Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
+const DynamoDb = require( 'aws-sdk/clients/dynamodb' )
+const documentClient = new DynamoDb.DocumentClient( { region: 'ap-south-1' } )
 
+
+
+module.exports.createNote = async ( event, context, callback ) => {
+  const data = JSON.parse( event.body )
+  try {
+    const params = {
+      TableName: 'notes',
+      Item: {
+        notesId: data.id,
+        title: data.title,
+        body: data.body
+      },
+      ConditionExpression: 'attribute_not_exists(notesId)',
+    }
+    await documentClient.put( params ).promise()
+    callback( null, {
+      statusCode: 201,
+      body: JSON.stringify( data )
+    } )
+  } catch ( error ) {
+    callback( null, {
+      statusCode: 500,
+      body: JSON.stringify( error.message )
+    } )
+  }
 };
 
 
