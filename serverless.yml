@@ -10,6 +10,11 @@ provider:
 functions:
   createNote:
     handler: handler.createNote
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: !GetAtt notesTable.Arn
     events:
       - http:
           path: notes
@@ -36,6 +41,9 @@ functions:
           path: notes
           method: get
           cors: true
+
+plugins:
+  - serverless-iam-roles-per-function
 
 resources:
   Resources:
