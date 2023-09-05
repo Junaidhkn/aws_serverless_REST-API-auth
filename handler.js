@@ -18,12 +18,12 @@ module.exports.createNote = async ( event, _context, callback ) => {
       ConditionExpression: 'attribute_not_exists(notesId)',
     }
     await documentClient.put( params ).promise()
-    callback( null, {
+    callback( _null, {
       statusCode: 201,
       body: JSON.stringify( data )
     } )
   } catch ( error ) {
-    callback( null, {
+    callback( _null, {
       statusCode: 500,
       body: JSON.stringify( error.message )
     } )
@@ -52,12 +52,12 @@ module.exports.updateNote = async ( event, _context, callback ) => {
       ConditionExpression: 'attribute_exists(notesId)',
     }
     await documentClient.update( params ).promise()
-    callback( null, {
+    callback( _null, {
       statusCode: 200,
       body: JSON.stringify( data )
     } )
   } catch ( error ) {
-    callback( null, {
+    callback( _null, {
       statusCode: 500,
       body: JSON.stringify( error.message )
     } )
@@ -65,34 +65,31 @@ module.exports.updateNote = async ( event, _context, callback ) => {
 };
 
 
-module.exports.deleteNote = async ( event ) => {
+module.exports.deleteNote = async ( event, _context, callback ) => {
   const notesId = event.pathParameters.id
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: `The note ${notesId} has been Deleted`,
-        input: event,
+  try {
+    const params = {
+      TableName: NOTES_TABLE_NAME,
+      Key: {
+        notesId
       },
-      null,
-      2
-    ),
-  };
+      ConditionExpression: 'attribute_exists(notesId)',
+    }
+    await documentClient.delete( params ).promise()
+    callback( _null, {
+      statusCode: 200,
+      body: JSON.stringify( { message: 'Note deleted successfully' } )
+    } )
 
+  } catch ( error ) {
+    callback( _null, {
+      statusCode: 500,
+      body: JSON.stringify( error.message )
+    } )
+  }
 };
 
 
 module.exports.getAllNotes = async ( event ) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'The Array of Notes!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
 
 };

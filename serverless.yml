@@ -38,6 +38,13 @@ functions:
           cors: true
   deleteNote:
     handler: handler.deleteNote
+    environment:
+      NOTES_TABLE_NAME: !Ref notesTable
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:DeleteItem
+        Resource: !GetAtt notesTable.Arn
     events:
       - http:
           path: notes/{id}
