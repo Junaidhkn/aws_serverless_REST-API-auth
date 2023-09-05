@@ -5,7 +5,8 @@ const documentClient = new DynamoDb.DocumentClient( { region: 'ap-south-1' } )
 const NOTES_TABLE_NAME = process.env.NOTES_TABLE_NAME || 'notes'
 
 
-module.exports.createNote = async ( event, _context, callback ) => {
+module.exports.createNote = async ( event, context, callback ) => {
+  context.callbackWaitsForEmptyEventLoop = false
   const data = JSON.parse( event.body )
   try {
     const params = {
@@ -31,7 +32,8 @@ module.exports.createNote = async ( event, _context, callback ) => {
 };
 
 
-module.exports.updateNote = async ( event, _context, callback ) => {
+module.exports.updateNote = async ( event, context, callback ) => {
+  context.callbackWaitsForEmptyEventLoop = false
   const notesId = event.pathParameters.id
   const data = JSON.parse( event.body )
 
@@ -65,7 +67,8 @@ module.exports.updateNote = async ( event, _context, callback ) => {
 };
 
 
-module.exports.deleteNote = async ( event, _context, callback ) => {
+module.exports.deleteNote = async ( event, context, callback ) => {
+  context.callbackWaitsForEmptyEventLoop = false
   const notesId = event.pathParameters.id
   try {
     const params = {
@@ -90,6 +93,21 @@ module.exports.deleteNote = async ( event, _context, callback ) => {
 };
 
 
-module.exports.getAllNotes = async ( event ) => {
-
+module.exports.getAllNotes = async ( _event, context, callback ) => {
+  context.callbackWaitsForEmptyEventLoop = false
+  try {
+    const params = {
+      TableName: NOTES_TABLE_NAME,
+    }
+    const notes = await documentClient.delete( params ).promise()
+    callback( _null, {
+      statusCode: 200,
+      body: JSON.stringify( notes )
+    } )
+  } catch ( error ) {
+    callback( _null, {
+      statusCode: 500,
+      body: JSON.stringify( error.message )
+    } )
+  }
 };

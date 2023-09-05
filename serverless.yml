@@ -52,6 +52,13 @@ functions:
           cors: true
   getAllNotes:
     handler: handler.getAllNotes
+    environment:
+      NOTES_TABLE_NAME: !Ref notesTable
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Scan
+        Resource: !GetAtt notesTable.Arn
     events:
       - http:
           path: notes
