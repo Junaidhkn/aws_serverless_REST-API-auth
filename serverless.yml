@@ -8,6 +8,8 @@ provider:
   region: ap-south-1
 
 functions:
+  authorizer:
+    handler: authorizer.handler
   createNote:
     handler: handler.createNote
     environment:
@@ -22,6 +24,7 @@ functions:
           path: notes
           method: post
           cors: true
+          authorizer: authorizer
   updateNote:
     handler: handler.updateNote
     environment:
@@ -36,6 +39,7 @@ functions:
           path: notes/{id}
           method: put
           cors: true
+          authorizer: authorizer
   deleteNote:
     handler: handler.deleteNote
     environment:
@@ -50,6 +54,7 @@ functions:
           path: notes/{id}
           method: delete
           cors: true
+          authorizer: authorizer
   getAllNotes:
     handler: handler.getAllNotes
     environment:
@@ -64,6 +69,7 @@ functions:
           path: notes
           method: get
           cors: true
+          authorizer: authorizer
 
 plugins:
   - serverless-iam-roles-per-function
