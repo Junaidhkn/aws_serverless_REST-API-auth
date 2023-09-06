@@ -20,6 +20,12 @@ exports.handler = ( event, context, callback ) => {
    let token = event.authorizationToken; // 'allow' or 'deny'
    switch ( token.toLowerCase() ) {
       case 'allow':
-         callback( _null, generatePolicy( 'user', 'allow', event.methodArn ) );
+         callback( _null, generatePolicy( 'user', 'Allow', event.methodArn ) );
+         break;
+      case 'deny':
+         callback( _null, generatePolicy( 'user', 'Deny', event.methodArn ) );
+         break;
+      default:
+         callback( "Error: Invalid token" );
    }
 }

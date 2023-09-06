@@ -23,7 +23,6 @@ functions:
       - http:
           path: notes
           method: post
-          cors: true
           authorizer: authorizer
   updateNote:
     handler: handler.updateNote
@@ -38,7 +37,6 @@ functions:
       - http:
           path: notes/{id}
           method: put
-          cors: true
           authorizer: authorizer
   deleteNote:
     handler: handler.deleteNote
@@ -53,7 +51,6 @@ functions:
       - http:
           path: notes/{id}
           method: delete
-          cors: true
           authorizer: authorizer
   getAllNotes:
     handler: handler.getAllNotes
@@ -68,7 +65,6 @@ functions:
       - http:
           path: notes
           method: get
-          cors: true
           authorizer: authorizer
 
 plugins:
