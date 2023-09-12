@@ -5,9 +5,9 @@ const generatePolicy = ( principalId, effect, resource ) => {
       let policyDocument = {
          Version: '2012-10-17',
          Statement: [{
-            Action: 'execute-api:Invoke',
             Effect: effect,
-            Resource: resource
+            Resource: resource,
+            Action: 'execute-api:Invoke',
          }]
       };
       authResponse.policyDocument = policyDocument;
@@ -18,7 +18,7 @@ const generatePolicy = ( principalId, effect, resource ) => {
 
 exports.handler = ( event, context, callback ) => {
    let token = event.authorizationToken; // 'allow' or 'deny'
-   switch ( token.toLowerCase() ) {
+   switch ( token ) {
       case 'allow':
          callback( _null, generatePolicy( 'user', 'Allow', event.methodArn ) );
          break;
