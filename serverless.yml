@@ -1,9 +1,10 @@
-service: aws-serverless-rest
+service: notes-api-version3
 frameworkVersion: '3'
 
 provider:
   name: aws
   runtime: nodejs18.x
+  lambdaHashingVersion: 20201221
   stage: dev
   region: ap-south-1
 
@@ -22,9 +23,10 @@ functions:
         Resource: !GetAtt notesTable.Arn
     events:
       - http:
-          path: notes
           method: post
+          path: notes
           authorizer: authorizer
+
   updateNote:
     handler: handler.updateNote
     environment:
@@ -36,9 +38,10 @@ functions:
         Resource: !GetAtt notesTable.Arn
     events:
       - http:
-          path: notes/{id}
           method: put
+          path: notes/{id}
           authorizer: authorizer
+
   deleteNote:
     handler: handler.deleteNote
     environment:
@@ -50,9 +53,10 @@ functions:
         Resource: !GetAtt notesTable.Arn
     events:
       - http:
-          path: notes/{id}
           method: delete
+          path: notes/{id}
           authorizer: authorizer
+
   getAllNotes:
     handler: handler.getAllNotes
     environment:
@@ -64,19 +68,19 @@ functions:
         Resource: !GetAtt notesTable.Arn
     events:
       - http:
-          path: notes
           method: get
+          path: notes
           authorizer: authorizer
 
 plugins:
   - serverless-iam-roles-per-function
 
+# you can add CloudFormation resource templates here
 resources:
   Resources:
     notesTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: notes
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: notesId
