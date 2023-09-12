@@ -1,24 +1,20 @@
 const generatePolicy = ( principalId, effect, resource ) => {
-   var authReponse = {};
-   authReponse.principalId = principalId;
+   let authResponse = {};
+
+   authResponse.principalId = principalId;
    if ( effect && resource ) {
-      let policyDocument = {
-         Version: "2012-10-17",
-         Statement: [
-            {
-               Effect: effect,
-               Resource: resource,
-               Action: "execute-api:Invoke",
-            },
-         ],
-      };
-      authReponse.policyDocument = policyDocument;
+      let policyDocument = {};
+      policyDocument.Version = '2012-10-17';
+      policyDocument.Statement = [];
+      let statementOne = {};
+      statementOne.Action = 'execute-api:Invoke';
+      statementOne.Effect = effect;
+      statementOne.Resource = resource;
+      policyDocument.Statement[0] = statementOne;
+      authResponse.policyDocument = policyDocument;
    }
-   authReponse.context = {
-      foo: "bar",
-   };
-   console.log( JSON.stringify( authReponse ) );
-   return authReponse;
+   return authResponse;
+
 };
 
 exports.handler = ( event, context, callback ) => {

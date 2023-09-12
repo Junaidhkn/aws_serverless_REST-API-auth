@@ -1,14 +1,14 @@
 "use strict";
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import {
+const DynamoDB = require( "@aws-sdk/client-dynamodb" );
+const {
   DynamoDBDocumentClient,
   PutCommand,
   UpdateCommand,
   DeleteCommand,
   ScanCommand,
-} from "@aws-sdk/lib-dynamodb"
+} = require( "@aws-sdk/lib-dynamodb" );
 
-const client = new DynamoDBClient( { region: process.env.AWS_REGION } );
+const client = new DynamoDB( { region: process.env.AWS_REGION } );
 const ddbDocClient = DynamoDBDocumentClient.from( client );
 const NOTES_TABLE_NAME = process.env.NOTES_TABLE_NAME;
 
